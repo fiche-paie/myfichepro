@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Fiche de Paie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #2a4365;
+        }
+        .required:after {
+            content: " *";
+            color: #e53e3e;
+        }
+        input, select {
+            width: 80%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.3);
+        }
+        button {
+            padding: 12px 15px;
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            display: block;
+            width: 90%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background: #2c5282;
+        }
+        h2 {
+            color: #2b6cb0;
+            margin-top: 30px;
+            border-bottom: 2px solid #bee3f8;
+            padding-bottom: 5px;
+        }
+        .color-picker {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .color-picker label {
+            margin-right: 10px;
+            width: auto;
+        }
+        .color-picker input {
+            width: 50px;
+            height: 30px;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <center><h2>Informations Entreprise</h2>
+        <label for="nomEntreprise" class="required">Nom</label>
+        <input type="text" id="nomEntreprise" value="SOCIETE RUE ANONYME">
+        <label for="adresseEntreprise" class="required">Adresse complète</label>
+        <input type="text" id="adresseEntreprise" value="4 RUE DE LA PAIX, 75000 PARIS">
+        <label for="siret" class="required">SIRET</label>
+        <input type="text" id="siret" value="1234567890002">
+        <label for="codeNaf" class="required">Code NAF</label>
+        <input type="text" id="codeNaf" value="6202A">
+        <label for="telEntreprise" class="required">Téléphone</label>
+        <input type="text" id="telEntreprise" value="01 23 45 67 89">
+        <label for="faxEntreprise">Fax</label>
+        <input type="text" id="faxEntreprise" value="01 23 45 67 90">
+        <label for="emailEntreprise" class="required">Email</label>
+        <input type="email" id="emailEntreprise" value="contact@entreprise.com">
+        <h2>Informations Salarié</h2>
+        <label for="nomSalarie" class="required">Nom</label>
+        <input type="text" id="nomSalarie" value="JEROME DUBOIS">
+        <label for="adresseSalarie" class="required">Adresse complète</label>
+        <input type="text" id="adresseSalarie" value="4 rue de la paix, 75000 PARIS">
+        <label for="emailSalarie">Email</label>
+        <input type="email" id="emailSalarie" value="jerome.dubois@email.com">
+        <label for="telSalarie">Téléphone</label>
+        <input type="text" id="telSalarie" value="06 12 34 56 78">
+        <label for="secuSalarie" class="required">N° Sécurité Sociale</label>
+        <input type="text" id="secuSalarie" value="2 2800000000000">
+        <label for="dateEntree" class="required">Date d'entrée dans l'entreprise (JJ/MM/AAAA)</label>
+        <input type="text" id="dateEntree" value="01/01/2020">
+        <label for="posteOccupe" class="required">Poste Occupé</label>
+        <input type="text" id="posteOccupe" value="Développeur Web">
+        <h2>Période et Salaire</h2>
+        <label for="dateDebut" class="required">Date de début de période (JJ/MM/AAAA)</label>
+        <input type="text" id="dateDebut" value="01/01/2025">
+        <label for="dateFin" class="required">Date de fin de période (JJ/MM/AAAA)</label>
+        <input type="text" id="dateFin" value="31/01/2025">
+        <label for="tauxHoraire">Taux horaire (€)</label>
+        <input type="number" id="tauxHoraire" value="18.25" min="0" step="0.01">
+        <label for="heuresMensuelles">Heures mensuelles</label>
+        <input type="number" id="heuresMensuelles" value="151.67" min="0" step="0.01">
+        <label for="salaireBrut" class="required">Salaire Brut Mensuel (€)</label>
+        <input type="number" id="salaireBrut" value="2778.98" min="0" step="0.01">
+        <label for="statutMarital" class="required">Statut marital</label>
+        <select id="statutMarital">
+            <option value="1">Célibataire</option>
+            <option value="2">Marié(e)</option>
+        </select>
+        <label for="nbEnfants">Nombre d'enfants</label>
+        <input type="number" id="nbEnfants" value="0" min="0">
+        <label for="tauxImpot">Taux d'imposition à la source (%)</label>
+        <input type="number" id="tauxImpot" value="0" min="0" max="100" step="0.1">
+        
+        <!-- Sélecteur de couleur -->
+        <div class="color-picker">
+            <label for="couleurTheme">Couleur du thème :</label>
+            <input type="color" id="couleurTheme" value="#ebf8ff">
+        </div>
+        
+        <button onclick="genererPDF()">Générer la fiche de paie</button>
+    </div>
+    <!-- Scripts placés à la fin du body -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        window.onload = function () {
+            const { jsPDF } = window.jspdf;
+            const PLF_SS = 3666; // Plafond Sécurité Sociale 2025
+
+            // Calcul automatique du salaire brut si taux horaire et heures sont renseignés
+            document.getElementById('tauxHoraire').addEventListener('change', calculerSalaireBrut);
+            document.getElementById('heuresMensuelles').addEventListener('change', calculerSalaireBrut);
+            
+            function calculerSalaireBrut() {
+                const tauxHoraire = parseFloat(document.getElementById('tauxHoraire').value);
+                const heures = parseFloat(document.getElementById('heuresMensuelles').value);
+                if (!isNaN(tauxHoraire) && !isNaN(heures) && heures > 0) {
+                    document.getElementById('salaireBrut').value = (tauxHoraire * heures).toFixed(2);
+                }
+            }
+
+            // Validation des champs
+            function validateInputs() {
+                const requiredFields = [
+                    "nomEntreprise",
+                    "adresseEntreprise",
+                    "siret",
+                    "codeNaf",
+                    "telEntreprise",
+                    "emailEntreprise",
+                    "nomSalarie",
+                    "adresseSalarie",
+                    "secuSalarie",
+                    "dateEntree",
+                    "posteOccupe",
+                    "dateDebut",
+                    "dateFin",
+                    "salaireBrut",
+                    "statutMarital"
+                ];
+                for (const field of requiredFields) {
+                    const value = document.getElementById(field).value.trim();
+                    if (!value) {
+                        alert(`Le champ "${document.querySelector(`label[for=${field}]`).textContent.replace(' *', '')}" est obligatoire.`);
+                        return false;
+                    }
+                }
+                // Validation SIRET
+                const siret = document.getElementById("siret").value;
+                if (!/^\d{14}$/.test(siret)) {
+                    alert("Le SIRET doit contenir exactement 14 chiffres.");
+                    return false;
+                }
+                // Validation Code NAF
+                const codeNaf = document.getElementById("codeNaf").value;
+                if (!/^\d{4}[A-Z]$/.test(codeNaf)) {
+                    alert("Le Code NAF doit être au format AAAA-Z (exemple : 1234Z).");
+                    return false;
+                }
+                // Validation Numéro SS
+                const secuSalarie = document.getElementById("secuSalarie").value.replace(/\s/g, "");
+                if (!/^\d{15}$/.test(secuSalarie)) {
+                    alert("Le numéro de sécurité sociale doit contenir exactement 15 chiffres.");
+                    return false;
+                }
+                // Validation Dates
+                const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+                if (!dateRegex.test(document.getElementById("dateEntree").value) ||
+                    !dateRegex.test(document.getElementById("dateDebut").value) ||
+                    !dateRegex.test(document.getElementById("dateFin").value)) {
+                    alert("Les dates doivent être au format JJ/MM/AAAA.");
+                    return false;
+                }
+                // Validation Salaire Brut
+                const salaireBrut = parseFloat(document.getElementById("salaireBrut").value);
+                if (isNaN(salaireBrut) || salaireBrut <= 0) {
+                    alert("Le salaire brut doit être un nombre positif.");
+                    return false;
+                }
+                return true;
+            }
+
+            // Calcul de l'ancienneté
+            function calculerAnciennete(dateEntree, dateFin) {
+                const [day, month, year] = dateEntree.split("/").map(Number);
+                const entree = new Date(year, month - 1, day);
+                const [dayFin, monthFin, yearFin] = dateFin.split("/").map(Number);
+                const fin = new Date(yearFin, monthFin - 1, dayFin);
+                let diffYears = fin.getFullYear() - entree.getFullYear();
+                let diffMonths = fin.getMonth() - entree.getMonth();
+                let diffDays = fin.getDate() - entree.getDate();
+                if (diffMonths < 0 || (diffMonths === 0 && diffDays < 0)) {
+                    diffYears--;
+                }
+                return {
+                    ans: diffYears,
+                    mois: Math.abs(diffMonths + (diffDays < 0 ? -1 : 0))
+                };
+            }
+
+            // Calcul des jours travaillés
+            function calculerJoursTravailles(dateDebut, dateFin) {
+                const [dayStart, monthStart, yearStart] = dateDebut.split("/").map(Number);
+                const [dayEnd, monthEnd, yearEnd] = dateFin.split("/").map(Number);
+                const debut = new Date(yearStart, monthStart - 1, dayStart);
+                const fin = new Date(yearEnd, monthEnd - 1, dayEnd);
+                const diffTime = Math.abs(fin - debut);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Inclusif
+                return diffDays;
+            }
+
+            // Fonction pour calculer les cotisations plafonnées
+            function calculerCotisationPlafonnee(base, taux, plafond) {
+                const basePlafonnee = Math.min(base, plafond);
+                return basePlafonnee * taux;
+            }
+
+            // Fonction pour convertir hex en RGB
+            function hexToRgb(hex) {
+                // Supprimer le # si présent
+                hex = hex.replace('#', '');
+                
+                // Convertir en valeurs R, G, B
+                const r = parseInt(hex.substring(0, 2), 16);
+                const g = parseInt(hex.substring(2, 4), 16);
+                const b = parseInt(hex.substring(4, 6), 16);
+                
+                return [r, g, b];
+            }
+
+            // Fonction principale pour générer le PDF
+            window.genererPDF = function () {
+                if (!validateInputs()) return;
+
+                // Récupération de la couleur choisie
+                const couleurHex = document.getElementById("couleurTheme").value;
+                const couleurRGB = hexToRgb(couleurHex);
+
+                // Récupération des données
+                const nomEntreprise = document.getElementById("nomEntreprise").value;
+                const adresseEntreprise = document.getElementById("adresseEntreprise").value;
+                const siret = document.getElementById("siret").value;
+                const codeNaf = document.getElementById("codeNaf").value;
+                const telEntreprise = document.getElementById("telEntreprise").value;
+                const faxEntreprise = document.getElementById("faxEntreprise").value;
+                const emailEntreprise = document.getElementById("emailEntreprise").value;
+                const nomSalarie = document.getElementById("nomSalarie").value;
+                const adresseSalarie = document.getElementById("adresseSalarie").value;
+                const emailSalarie = document.getElementById("emailSalarie").value;
+                const telSalarie = document.getElementById("telSalarie").value;
+                const secuSalarie = document.getElementById("secuSalarie").value.replace(/\s/g, "");
+                const dateEntree = document.getElementById("dateEntree").value;
+                const posteOccupe = document.getElementById("posteOccupe").value;
+                const dateDebut = document.getElementById("dateDebut").value;
+                const dateFin = document.getElementById("dateFin").value;
+                const salaireBrutMensuel = parseFloat(document.getElementById("salaireBrut").value);
+                const tauxHoraire = parseFloat(document.getElementById("tauxHoraire").value) || 0;
+                const heuresMensuelles = parseFloat(document.getElementById("heuresMensuelles").value) || 0;
+                const statutMarital = parseInt(document.getElementById("statutMarital").value);
+                const nbEnfants = parseInt(document.getElementById("nbEnfants").value);
+                const tauxImpot = parseFloat(document.getElementById("tauxImpot").value) || 0;
+
+                // Calculs
+                const anciennete = calculerAnciennete(dateEntree, dateFin);
+
+                // Extraction du mois et de l'année à partir de la date de début
+                const [jourDebut, mois, annee] = dateDebut.split("/").map(Number);
+                const joursDansLeMois = new Date(annee, mois, 0).getDate();
+                const joursTravailles = calculerJoursTravailles(dateDebut, dateFin);
+                const salaireBrutProrata = (salaireBrutMensuel / joursDansLeMois) * joursTravailles;
+
+                // Calcul des cotisations avec prise en compte du plafond SS
+                const cotisations = {
+                    salariales: {
+                        maladie: calculerCotisationPlafonnee(salaireBrutProrata, 0.0075, PLF_SS),
+                        vieillessePlafonnee: calculerCotisationPlafonnee(salaireBrutProrata, 0.069, PLF_SS),
+                        vieillesseDeplafonnee: salaireBrutProrata * 0.004,
+                        retraiteComplementaireTranche1: calculerCotisationPlafonnee(salaireBrutProrata, 0.0315, PLF_SS),
+                        retraiteComplementaireTranche2: salaireBrutProrata * 0.009,
+                        chomage: calculerCotisationPlafonnee(salaireBrutProrata, 0.024, PLF_SS),
+                        csgDeductible: salaireBrutProrata * 0.068,
+                        csgNonDeductible: salaireBrutProrata * 0.029
+                    },
+                    patronales: {
+                        maladie: calculerCotisationPlafonnee(salaireBrutProrata, 0.13, PLF_SS),
+                        vieillessePlafonnee: calculerCotisationPlafonnee(salaireBrutProrata, 0.0855, PLF_SS),
+                        vieillesseDeplafonnee: salaireBrutProrata * 0.018,
+                        retraiteComplementaireTranche1: calculerCotisationPlafonnee(salaireBrutProrata, 0.08, PLF_SS),
+                        retraiteComplementaireTranche2: salaireBrutProrata * 0.016,
+                        chomage: calculerCotisationPlafonnee(salaireBrutProrata, 0.04, PLF_SS),
+                        formationProfessionnelle: salaireBrutProrata * 0.01,
+                        taxeApprentissage: salaireBrutProrata * 0.0068,
+                        versementMobilite: salaireBrutProrata * 0.01,
+                        ags: salaireBrutProrata * 0.0015
+                    }
+                };
+
+                const totalSalarial = Object.values(cotisations.salariales).reduce((acc, val) => acc + val, 0);
+                const totalPatronal = Object.values(cotisations.patronales).reduce((acc, val) => acc + val, 0);
+                const netImposable = salaireBrutProrata - cotisations.salariales.csgDeductible - totalSalarial + cotisations.salariales.csgNonDeductible;
+                const impotRevenu = (netImposable * (tauxImpot / 100)) || 0;
+                const netAPayer = salaireBrutProrata - totalSalarial - impotRevenu;
+
+                // Génération du PDF
+                const doc = new jsPDF();
+                doc.setFontSize(14);
+                doc.setTextColor(0, 0, 0); // Titre en noir comme demandé
+                doc.text("BULLETIN DE SALAIRE", 105, 15, { align: 'center' });
+
+                // Encadrement principal avec la couleur choisie
+                doc.setDrawColor(couleurRGB[0], couleurRGB[1], couleurRGB[2]);
+                doc.setLineWidth(0.3);
+                doc.roundedRect(10, 5, 190, 280, 5, 5);
+
+                // Informations entreprise
+                const infosEntreprise = [
+                    nomEntreprise,
+                    adresseEntreprise,
+                    `SIRET : ${siret}`,
+                    `Code NAF : ${codeNaf}`,
+                    `Tel : ${telEntreprise}`,
+                    `Fax : ${faxEntreprise}`,
+                    `Email : ${emailEntreprise}`
+                ];
+                const yEntrepriseStart = 23;
+                const yEntrepriseHeight = 35;
+                doc.setFillColor(couleurRGB[0], couleurRGB[1], couleurRGB[2]);
+                doc.roundedRect(15, yEntrepriseStart, 80, yEntrepriseHeight, 3, 3, "F");
+                let yPositionEntreprise = yEntrepriseStart + (yEntrepriseHeight / 3) - ((infosEntreprise.length * 2) / 3);
+                infosEntreprise.forEach((line) => {
+                    doc.setFontSize(9);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(line, 20, yPositionEntreprise, { align: 'left' });
+                    yPositionEntreprise += 4;
+                });
+
+                // Informations salarié
+                const infosSalarie = [
+                    nomSalarie,
+                    adresseSalarie,
+                    `N° DE SECURITE SOCIAL : ${secuSalarie}`,
+                    `Date d'entrée : ${dateEntree} (${anciennete.ans} ans ${anciennete.mois} mois)`,
+                    `Poste Occupé : ${posteOccupe}`,
+                    `Tel : ${telSalarie}`,
+                    `Email : ${emailSalarie}`
+                ];
+                const ySalarieStart = 23;
+                const ySalarieHeight = 35;
+                doc.setFillColor(couleurRGB[0], couleurRGB[1], couleurRGB[2]);
+                doc.roundedRect(115, ySalarieStart, 80, ySalarieHeight, 3, 3, "F");
+                let yPositionSalarie = ySalarieStart + (ySalarieHeight / 3) - ((infosSalarie.length * 2) / 3);
+                infosSalarie.forEach((line) => {
+                    doc.setFontSize(9);
+                    doc.setTextColor(0, 0, 0);
+                    doc.text(line, 120, yPositionSalarie, { align: 'left' });
+                    yPositionSalarie += 4;
+                });
+
+                // Période de paie en noir comme demandé
+                doc.setFont(undefined, 'bold');
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0); // "Période" en noir
+                doc.text("Période :", 105, yPositionEntreprise + 11, { align: 'center' });
+                doc.setFontSize(9);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`${dateDebut} au ${dateFin}`, 105, yPositionEntreprise + 16, { align: 'center' });
+                doc.setFont(undefined, 'normal');
+
+                // Tableau des cotisations
+                const lignesPaie = [
+                    ["SALAIRE BRUT MENSUEL", "", "", salaireBrutMensuel.toFixed(2), "", ""],
+                    ["SALAIRE BRUT PRORATA", "", "", salaireBrutProrata.toFixed(2), "", ""],
+                    ["Taux horaire", tauxHoraire.toFixed(2), "", "", "", ""],
+                    ["Heures travaillées", heuresMensuelles.toFixed(2), "", "", "", ""],
+                    ["COTISATIONS SALARIALES", "", "", "", "", ""],
+                    ["Maladie - maternité - invalidité - décès", "", "0.75%", cotisations.salariales.maladie.toFixed(2), "", ""],
+                    ["Assurance vieillesse plafonnée", "", "6.9%", cotisations.salariales.vieillessePlafonnee.toFixed(2), "", ""],
+                    ["Assurance vieillesse déplafonnée", "", "0.4%", cotisations.salariales.vieillesseDeplafonnee.toFixed(2), "", ""],
+                    ["Retraite complémentaire tranche 1", "", "3.15%", cotisations.salariales.retraiteComplementaireTranche1.toFixed(2), "", ""],
+                    ["Retraite complémentaire tranche 2", "", "0.9%", cotisations.salariales.retraiteComplementaireTranche2.toFixed(2), "", ""],
+                    ["Chômage", "", "2.4%", cotisations.salariales.chomage.toFixed(2), "", ""],
+                    ["CSG déductible", "", "6.8%", cotisations.salariales.csgDeductible.toFixed(2), "", ""],
+                    ["CSG/CRDS non déductible", "", "2.9%", cotisations.salariales.csgNonDeductible.toFixed(2), "", ""],
+                    ["Impôt sur le revenu prélevé à la source", "", tauxImpot.toFixed(1) + "%", impotRevenu.toFixed(2), "", ""],
+                    ["CONGÉS PAYÉS (10%)", "", "10%", (salaireBrutProrata * 0.1).toFixed(2), "", ""],
+                    ["", "", "TOTAL SALARIAL", totalSalarial.toFixed(2), "", ""],
+                    ["COTISATIONS PATRONALES", "", "", "", "", ""],
+                    ["Maladie - maternité - invalidité - décès", "", "13%", "", "", cotisations.patronales.maladie.toFixed(2)],
+                    ["Assurance vieillesse plafonnée", "", "8.55%", "", "", cotisations.patronales.vieillessePlafonnee.toFixed(2)],
+                    ["Assurance vieillesse déplafonnée", "", "1.8%", "", "", cotisations.patronales.vieillesseDeplafonnee.toFixed(2)],
+                    ["Retraite complémentaire tranche 1", "", "8%", "", "", cotisations.patronales.retraiteComplementaireTranche1.toFixed(2)],
+                    ["Retraite complémentaire tranche 2", "", "1.6%", "", "", cotisations.patronales.retraiteComplementaireTranche2.toFixed(2)],
+                    ["Chômage", "", "4%", "", "", cotisations.patronales.chomage.toFixed(2)],
+                    ["Formation professionnelle", "", "1%", "", "", cotisations.patronales.formationProfessionnelle.toFixed(2)],
+                    ["Taxe d'apprentissage", "", "0.68%", "", "", cotisations.patronales.taxeApprentissage.toFixed(2)],
+                    ["Versement mobilité", "", "1%", "", "", cotisations.patronales.versementMobilite.toFixed(2)],
+                    ["Cotisation AGS", "", "0.15%", "", "", cotisations.patronales.ags.toFixed(2)],
+                    ["", "", "TOTAL PATRONAL", "", "", totalPatronal.toFixed(2)],
+                    ["NET IMPOSABLE", "", "", netImposable.toFixed(2), "", ""],
+                    ["NET À PAYER EN EUROS", "", "", netAPayer.toFixed(2), "", ""]
+                ];
+
+                // Calcul de la largeur totale du tableau
+                const columnWidths = [60, 15, 15, 25, 25, 30];
+                const totalTableWidth = columnWidths.reduce((a, b) => a + b, 0);
+                const startX = (210 - totalTableWidth) / 2;
+                const tableStartY = yPositionEntreprise + 30;
+
+                // Ajout d'un rectangle pour l'en-tête du tableau centré
+                doc.setDrawColor(couleurRGB[0], couleurRGB[1], couleurRGB[2]);
+                doc.setFillColor(couleurRGB[0], couleurRGB[1], couleurRGB[2]);
+                doc.roundedRect(startX, tableStartY, totalTableWidth, 7, 2, 2, "FD");
+
+                // Ajout du tableau des cotisations centré
+                doc.autoTable({
+                    startY: tableStartY + 7 - 1,
+                    head: [["ÉLÉMENTS DE PAIE", "BASE", "TAUX", "À DÉDUIRE", "À PAYER", "CHARGES PATRONALES"]],
+                    body: lignesPaie,
+                    margin: { left: startX },
+                    styles: {
+                        fontSize: 7,
+                        cellPadding: 1.42,
+                        overflow: 'linebreak',
+                        minCellHeight: 4,
+                        halign: 'left',
+                        textColor: [0, 0, 0]
+                    },
+                    headStyles: {
+                        fillColor: couleurRGB,
+                        textColor: [0, 0, 0],
+                        fontSize: 7,
+                        cellPadding: 2,
+                        halign: 'center'
+                    },
+                    columnStyles: {
+                        0: { cellWidth: columnWidths[0], fontStyle: 'bold', halign: 'left' },
+                        1: { cellWidth: columnWidths[1], halign: 'center' },
+                        2: { cellWidth: columnWidths[2], halign: 'center' },
+                        3: { cellWidth: columnWidths[3], halign: 'right' },
+                        4: { cellWidth: columnWidths[4], halign: 'right' },
+                        5: { cellWidth: columnWidths[5], halign: 'right' }
+                    },
+                    bodyStyles: { valign: 'middle' },
+                    alternateRowStyles: { fillColor: couleurRGB },
+                    tableWidth: 'fixed'
+                });
+
+                // Sauvegarde du PDF
+                doc.save("bulletin_paie_" + nomSalarie.replace(/\s+/g, '_') + ".pdf");
+                alert("Fiche de paie générée avec succès !");
+            };
+        };
+    </script>
+</body>
+</html>
