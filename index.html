@@ -392,14 +392,14 @@
                 });
 
                 // Période de paie en noir comme demandé
-                doc.setFont(undefined, 'bold');
-                doc.setFontSize(10);
-                doc.setTextColor(0, 0, 0); // "Période" en noir
-                doc.text("Période :", 105, yPositionEntreprise + 11, { align: 'center' });
-                doc.setFontSize(9);
-                doc.setTextColor(0, 0, 0);
-                doc.text(`${dateDebut} au ${dateFin}`, 105, yPositionEntreprise + 16, { align: 'center' });
-                doc.setFont(undefined, 'normal');
+                  doc.setFont(undefined, 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(couleurRGB[0], couleurRGB[1], couleurRGB[2]); // "Période" dans la couleur choisie
+    doc.text("PERIODE :", 105, yPositionEntreprise + 11, { align: 'center' });
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0); // Date en noir
+    doc.text(`${dateDebut} au ${dateFin}`, 105, yPositionEntreprise + 16, { align: 'center' });
+    doc.setFont(undefined, 'normal');
 
                 // Tableau des cotisations
                 const lignesPaie = [
